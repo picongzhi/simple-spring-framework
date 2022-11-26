@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+    <bean id="userDao" class="com.pcz.simple.spring.framework.common.UserDaoFactoryBean"/>
+
+    <bean id="userService" class="com.pcz.simple.spring.framework.common.UserService">
+        <property name="id" value="1"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean class="com.pcz.simple.spring.framework.common.MyBeanFactoryPostProcessor"/>
+
+    <bean class="com.pcz.simple.spring.framework.common.MyBeanPostProcessor"/>
+</beans>
