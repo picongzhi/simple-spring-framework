@@ -23,6 +23,7 @@ public class AspectJExpressionPointcut implements Pointcut, ClassFilter, MethodM
     private static final Set<PointcutPrimitive> SUPPORTED_PRIMITIVES = new HashSet<>();
 
     static {
+        // execution
         SUPPORTED_PRIMITIVES.add(PointcutPrimitive.EXECUTION);
     }
 
@@ -32,9 +33,8 @@ public class AspectJExpressionPointcut implements Pointcut, ClassFilter, MethodM
     private final PointcutExpression pointcutExpression;
 
     public AspectJExpressionPointcut(String expression) {
-        PointcutParser pointcutParser = PointcutParser
-                .getPointcutParserSupportingSpecifiedPrimitivesAndUsingSpecifiedClassLoaderForResolution(
-                        SUPPORTED_PRIMITIVES, this.getClass().getClassLoader());
+        PointcutParser pointcutParser = PointcutParser.getPointcutParserSupportingSpecifiedPrimitivesAndUsingSpecifiedClassLoaderForResolution(
+                SUPPORTED_PRIMITIVES, this.getClass().getClassLoader());
         this.pointcutExpression = pointcutParser.parsePointcutExpression(expression);
     }
 

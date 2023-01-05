@@ -3,7 +3,7 @@ package com.pcz.simple.spring.framework.aop;
 import java.lang.reflect.Method;
 
 /**
- * 方法是否匹配
+ * 方法匹配器
  *
  * @author picongzhi
  */
