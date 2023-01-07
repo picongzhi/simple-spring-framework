@@ -2,6 +2,8 @@ package com.pcz.simple.spring.framework.beans.factory.config;
 
 import com.pcz.simple.spring.framework.beans.PropertyValues;
 
+import java.util.Objects;
+
 /**
  * Bean 定义
  *
@@ -110,5 +112,35 @@ public class BeanDefinition {
 
     public boolean isPrototype() {
         return prototype;
+    }
+
+    @Override
+    public String toString() {
+        return "BeanDefinition{" +
+                "beanClass=" + beanClass +
+                ", propertyValues=" + propertyValues +
+                ", initMethodName='" + initMethodName + '\'' +
+                ", destroyMethodName='" + destroyMethodName + '\'' +
+                ", scope='" + scope + '\'' +
+                ", singleton=" + singleton +
+                ", prototype=" + prototype +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BeanDefinition that = (BeanDefinition) o;
+        return singleton == that.singleton && prototype == that.prototype && Objects.equals(beanClass, that.beanClass) && Objects.equals(propertyValues, that.propertyValues) && Objects.equals(initMethodName, that.initMethodName) && Objects.equals(destroyMethodName, that.destroyMethodName) && Objects.equals(scope, that.scope);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(beanClass, propertyValues, initMethodName, destroyMethodName, scope, singleton, prototype);
     }
 }
