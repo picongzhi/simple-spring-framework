@@ -26,7 +26,7 @@ public class PropertyPlaceholderConfigurerTest {
         beanFactory.registerBeanDefinition("demoBean", beanDefinition);
 
         String location = "classpath:demo-bean.properties";
-        propertyPlaceholderConfigurer.setLocaltion(location);
+        propertyPlaceholderConfigurer.setLocation(location);
         propertyPlaceholderConfigurer.postProcessBeanFactory(beanFactory);
     }
 

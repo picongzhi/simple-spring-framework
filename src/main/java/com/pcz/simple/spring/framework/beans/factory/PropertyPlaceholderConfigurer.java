@@ -7,6 +7,7 @@ import com.pcz.simple.spring.framework.beans.factory.config.BeanDefinition;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanFactoryPostProcessor;
 import com.pcz.simple.spring.framework.core.io.DefaultResourceLoader;
 import com.pcz.simple.spring.framework.core.io.Resource;
+import com.pcz.simple.spring.framework.util.StringValueResolver;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,16 +31,16 @@ public class PropertyPlaceholderConfigurer implements BeanFactoryPostProcessor {
     /**
      * 属性文件路径
      */
-    private String localtion;
+    private String location;
 
-    public void setLocaltion(String localtion) {
-        this.localtion = localtion;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource(localtion);
+        Resource resource = resourceLoader.getResource(location);
 
         // 加载属性文件
         Properties properties = new Properties();
@@ -60,20 +61,54 @@ public class PropertyPlaceholderConfigurer implements BeanFactoryPostProcessor {
                     continue;
                 }
 
-                String strValue = (String) value;
-                StringBuilder stringBuilder = new StringBuilder(strValue);
-
-                int startIndex = strValue.indexOf(DEFAULT_PLACEHOLDER_PREFIX);
-                int stopIndex = strValue.indexOf(DEFAULT_PLACEHOLDER_SUFFIX);
-                if (startIndex != -1 && stopIndex != -1 && startIndex < stopIndex) {
-                    String propKey = strValue.substring(startIndex + 2, stopIndex);
-                    String propValue = properties.getProperty(propKey);
-                    stringBuilder.replace(startIndex, stopIndex + 1, propValue);
-
-                    propertyValues.addPropertyValue(
-                            new PropertyValue(propertyValue.getName(), stringBuilder.toString()));
-                }
+                value = resolvePlaceholder((String) value, properties);
+                propertyValues.addPropertyValue(
+                        new PropertyValue(propertyValue.getName(), value));
             }
+        }
+
+        // 向容器添加字符串占位符解析器
+        StringValueResolver resolver = new PlaceholderResolvingStringValueResolver(properties);
+        beanFactory.addEmbeddedValueResolver(resolver);
+    }
+
+    /**
+     * 解析字符串占位符
+     *
+     * @param value      字符串
+     * @param properties 配置文件
+     * @return 解析后的值
+     */
+    private String resolvePlaceholder(String value, Properties properties) {
+        StringBuilder stringBuilder = new StringBuilder(value);
+
+        int startIndex = value.indexOf(DEFAULT_PLACEHOLDER_PREFIX);
+        int stopIndex = value.indexOf(DEFAULT_PLACEHOLDER_SUFFIX);
+        if (startIndex != -1 && stopIndex != -1 && startIndex < stopIndex) {
+            String propKey = value.substring(startIndex + 2, stopIndex);
+            String propValue = properties.getProperty(propKey);
+            stringBuilder.replace(startIndex, stopIndex + 1, propValue);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 占位符字符串解析器
+     */
+    private class PlaceholderResolvingStringValueResolver implements StringValueResolver {
+        /**
+         * 配置
+         */
+        private final Properties properties;
+
+        public PlaceholderResolvingStringValueResolver(Properties properties) {
+            this.properties = properties;
+        }
+
+        @Override
+        public String resolveStringValue(String value) {
+            return PropertyPlaceholderConfigurer.this.resolvePlaceholder(value, properties);
         }
     }
 }

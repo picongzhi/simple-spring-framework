@@ -1,6 +1,7 @@
 package com.pcz.simple.spring.framework.beans.factory.config;
 
 import com.pcz.simple.spring.framework.beans.factory.HierarchicalBeanFactory;
+import com.pcz.simple.spring.framework.util.StringValueResolver;
 
 /**
  * 可配置的 BeanFactory
@@ -30,4 +31,19 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
      * 销毁所有单例
      */
     void destroySingletons();
+
+    /**
+     * 添加嵌套的值解析器
+     *
+     * @param resolver 值解析器
+     */
+    void addEmbeddedValueResolver(StringValueResolver resolver);
+
+    /**
+     * 嵌套解析值
+     *
+     * @param value 值
+     * @return 解析后的值
+     */
+    String resolveEmbeddedValue(String value);
 }

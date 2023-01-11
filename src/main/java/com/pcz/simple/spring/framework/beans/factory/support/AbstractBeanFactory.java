@@ -6,6 +6,7 @@ import com.pcz.simple.spring.framework.beans.factory.config.BeanDefinition;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanPostProcessor;
 import com.pcz.simple.spring.framework.beans.factory.config.ConfigurableBeanFactory;
 import com.pcz.simple.spring.framework.util.ClassUtils;
+import com.pcz.simple.spring.framework.util.StringValueResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,13 @@ public abstract class AbstractBeanFactory
      */
     private final ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
+    /**
+     * 嵌套的值解析器
+     */
+    private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
+
     @Override
+
     public Object getBean(String beanName) throws BeansException {
         return doGetBean(beanName, null);
     }
@@ -131,5 +138,20 @@ public abstract class AbstractBeanFactory
      */
     public ClassLoader getBeanClassLoader() {
         return this.beanClassLoader;
+    }
+
+    @Override
+    public void addEmbeddedValueResolver(StringValueResolver resolver) {
+        this.embeddedValueResolvers.add(resolver);
+    }
+
+    @Override
+    public String resolveEmbeddedValue(String value) {
+        String result = value;
+        for (StringValueResolver resolver : this.embeddedValueResolvers) {
+            result = resolver.resolveStringValue(value);
+        }
+
+        return result;
     }
 }
