@@ -39,7 +39,7 @@ public class AutowiredAnnotationBeanPostProcessorTest {
         Assertions.assertThat(helloService.hello()).isNotNull();
     }
 
-    private static class HelloService {
+    public static class HelloService {
         @Value("${name}")
         private String name;
 
@@ -58,7 +58,7 @@ public class AutowiredAnnotationBeanPostProcessorTest {
         }
     }
 
-    private static class HelloRepository {
+    public static class HelloRepository {
         public HelloRepository() {
         }
 
