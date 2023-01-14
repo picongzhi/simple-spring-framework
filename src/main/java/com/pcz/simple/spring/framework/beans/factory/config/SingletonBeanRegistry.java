@@ -1,7 +1,7 @@
 package com.pcz.simple.spring.framework.beans.factory.config;
 
 /**
- * 单例 bean 注册中心
+ * 单例 bean 注册器
  *
  * @author picongzhi
  */

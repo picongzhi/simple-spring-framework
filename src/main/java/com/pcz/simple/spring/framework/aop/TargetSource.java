@@ -1,5 +1,7 @@
 package com.pcz.simple.spring.framework.aop;
 
+import com.pcz.simple.spring.framework.util.ClassUtils;
+
 /**
  * 被代理的目标对象
  *
@@ -30,6 +32,8 @@ public class TargetSource {
      * @return 被代理的目标类型
      */
     public Class<?>[] getTargetClass() {
-        return target.getClass().getInterfaces();
+        Class<?> cls = this.target.getClass();
+        cls = ClassUtils.isCglibProxyClass(cls) ? cls.getSuperclass() : cls;
+        return cls.getInterfaces();
     }
 }

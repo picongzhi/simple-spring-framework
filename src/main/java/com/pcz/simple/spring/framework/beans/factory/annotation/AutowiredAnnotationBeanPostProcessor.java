@@ -44,6 +44,11 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     }
 
     @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        return true;
+    }
+
+    @Override
     public PropertyValues postProcessPropertyValues(PropertyValues propertyValues, Object bean, String beanName) throws BeansException {
         Class<?> beanClass = ClassUtils.isCglibProxyClass(bean.getClass()) ?
                 bean.getClass().getSuperclass() :

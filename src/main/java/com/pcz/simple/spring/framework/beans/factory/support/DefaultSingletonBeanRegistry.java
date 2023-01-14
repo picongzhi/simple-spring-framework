@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 默认的单例 bean 注册中心
+ * 默认的单例 bean 注册器
  *
  * @author picongzhi
  */
@@ -30,7 +30,6 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     private Map<String, DisposableBean> disposableBeans = new HashMap<>();
 
     @Override
-
     public Object getSingleton(String beanName) {
         return this.singletonObjects.get(beanName);
     }

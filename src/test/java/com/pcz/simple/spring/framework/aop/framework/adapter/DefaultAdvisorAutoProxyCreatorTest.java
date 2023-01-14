@@ -37,10 +37,10 @@ public class DefaultAdvisorAutoProxyCreatorTest {
     }
 
     @Test
-    public void should_post_process_before_instantisation() {
-        Class<?> cls = HelloServiceImpl.class;
+    public void should_post_process_after_initialization() {
+        Object bean = new HelloServiceImpl();
         String beanName = "helloService";
-        Object proxy = creator.postProcessBeforeInstantiation(cls, beanName);
+        Object proxy = creator.postProcessAfterInitialization(bean, beanName);
         Assertions.assertThat(proxy).isInstanceOf(HelloService.class);
 
         HelloService helloService = (HelloService) proxy;
