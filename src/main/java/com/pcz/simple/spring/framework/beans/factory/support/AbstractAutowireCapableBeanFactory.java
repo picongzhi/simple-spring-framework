@@ -2,12 +2,14 @@ package com.pcz.simple.spring.framework.beans.factory.support;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
 import com.pcz.simple.spring.framework.beans.BeanNameAware;
 import com.pcz.simple.spring.framework.beans.BeansException;
 import com.pcz.simple.spring.framework.beans.PropertyValue;
 import com.pcz.simple.spring.framework.beans.PropertyValues;
 import com.pcz.simple.spring.framework.beans.factory.*;
 import com.pcz.simple.spring.framework.beans.factory.config.*;
+import com.pcz.simple.spring.framework.core.convert.ConversionService;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -161,10 +163,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 Object value = propertyValue.getValue();
 
                 if (value instanceof BeanReference) {
+                    // 引用依赖
                     BeanReference beanReference = (BeanReference) value;
                     value = getBean(beanReference.getBeanName());
+                } else {
+                    // 值依赖
+                    Class<?> sourceType = value.getClass();
+                    Class<?> targetType = (Class<?>) TypeUtil.getFieldType(bean.getClass(), name);
+
+                    ConversionService conversionService = getConversionService();
+                    if (conversionService != null
+                            && conversionService.canConvert(sourceType, targetType)) {
+                        // 类型转换
+                        value = conversionService.convert(value, targetType);
+                    }
                 }
 
+                // 通过反射给字段赋值
                 BeanUtil.setFieldValue(bean, name, value);
             }
         } catch (Exception e) {

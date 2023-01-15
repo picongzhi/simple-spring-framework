@@ -11,6 +11,7 @@ import com.pcz.simple.spring.framework.context.event.ApplicationEventMulticaster
 import com.pcz.simple.spring.framework.context.event.ContextClosedEvent;
 import com.pcz.simple.spring.framework.context.event.ContextRefreshedEvent;
 import com.pcz.simple.spring.framework.context.event.SimpleApplicationEventMulticaster;
+import com.pcz.simple.spring.framework.core.convert.ConversionService;
 import com.pcz.simple.spring.framework.core.io.DefaultResourceLoader;
 
 import java.util.Collection;
@@ -57,8 +58,8 @@ public abstract class AbstractApplicationContext
         // 7. 注册事件监听器
         registerListeners();
 
-        // 8. 提前实例化单例 bean
-        beanFactory.preInstantiateSingletons();
+        // 8. 完成 BeanFactory 的初始化
+        finishBeanFactoryInitialization(beanFactory);
 
         // 9. 结束刷新，发布应用刷新事件
         finishRefresh();
@@ -142,6 +143,25 @@ public abstract class AbstractApplicationContext
     }
 
     /**
+     * 完成 BeanFactory 的初始化
+     *
+     * @param beanFactory BeanFactory
+     */
+    private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+        // 设置类型转换服务
+        String conversionServiceBeanName = "conversionService";
+        if (beanFactory.containsBean(conversionServiceBeanName)) {
+            Object conversionService = beanFactory.getBean(conversionServiceBeanName);
+            if (conversionService instanceof ConversionService) {
+                beanFactory.setConversionService((ConversionService) conversionService);
+            }
+        }
+
+        // 提前实例化单例
+        beanFactory.preInstantiateSingletons();
+    }
+
+    /**
      * 结束刷新，发布应用上下文刷新事件
      */
     private void finishRefresh() {
@@ -171,6 +191,11 @@ public abstract class AbstractApplicationContext
     @Override
     public <T> T getBean(Class<T> requiredType) throws BeansException {
         return getBeanFactory().getBean(requiredType);
+    }
+
+    @Override
+    public boolean containsBean(String beanName) {
+        return getBeanFactory().containsBean(beanName);
     }
 
     @Override

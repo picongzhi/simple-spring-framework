@@ -1,7 +1,9 @@
 package com.pcz.simple.spring.framework.beans.factory.config;
 
 import com.pcz.simple.spring.framework.beans.factory.HierarchicalBeanFactory;
+import com.pcz.simple.spring.framework.core.convert.ConversionService;
 import com.pcz.simple.spring.framework.util.StringValueResolver;
+import com.sun.istack.internal.Nullable;
 
 /**
  * 可配置的 BeanFactory
@@ -46,4 +48,19 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
      * @return 解析后的值
      */
     String resolveEmbeddedValue(String value);
+
+    /**
+     * 获取类型转换服务
+     *
+     * @return 类型转换服务
+     */
+    @Nullable
+    ConversionService getConversionService();
+
+    /**
+     * 设置类型转换服务
+     *
+     * @param conversionService 类型转换服务
+     */
+    void setConversionService(ConversionService conversionService);
 }

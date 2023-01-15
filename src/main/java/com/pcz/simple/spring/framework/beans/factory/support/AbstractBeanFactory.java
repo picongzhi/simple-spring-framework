@@ -5,8 +5,10 @@ import com.pcz.simple.spring.framework.beans.factory.FactoryBean;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanDefinition;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanPostProcessor;
 import com.pcz.simple.spring.framework.beans.factory.config.ConfigurableBeanFactory;
+import com.pcz.simple.spring.framework.core.convert.ConversionService;
 import com.pcz.simple.spring.framework.util.ClassUtils;
 import com.pcz.simple.spring.framework.util.StringValueResolver;
+import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +36,13 @@ public abstract class AbstractBeanFactory
      */
     private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
 
-    @Override
+    /**
+     * 类型转换服务
+     */
+    @Nullable
+    private ConversionService conversionService;
 
+    @Override
     public Object getBean(String beanName) throws BeansException {
         return doGetBean(beanName, null);
     }
@@ -49,6 +56,19 @@ public abstract class AbstractBeanFactory
     public <T> T getBean(String beanName, Class<T> requiredType) throws BeansException {
         return (T) getBean(beanName);
     }
+
+    @Override
+    public boolean containsBean(String beanName) {
+        return this.containsBeanDefinition(beanName);
+    }
+
+    /**
+     * 判断是否包含 BeanDefinition
+     *
+     * @param beanName bean 名称
+     * @return 是否包含 BeanDefinition
+     */
+    protected abstract boolean containsBeanDefinition(String beanName);
 
     /**
      * 获取 bean 实例
@@ -153,5 +173,15 @@ public abstract class AbstractBeanFactory
         }
 
         return result;
+    }
+
+    @Override
+    public ConversionService getConversionService() {
+        return this.conversionService;
+    }
+
+    @Override
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
     }
 }
