@@ -39,6 +39,42 @@ public class AutowiredAnnotationBeanPostProcessorTest {
         Assertions.assertThat(helloService.hello()).isNotNull();
     }
 
+    @Test
+    public void should_post_process_before_initialization() {
+        String beanName = "name";
+        Object bean = new Object();
+
+        Object result = processor.postProcessBeforeInitialization(bean, beanName);
+        Assertions.assertThat(result).isNull();
+    }
+
+    @Test
+    public void should_post_process_after_initialization() {
+        String beanName = "name";
+        Object bean = new Object();
+
+        Object result = processor.postProcessAfterInitialization(bean, beanName);
+        Assertions.assertThat(result).isNull();
+    }
+
+    @Test
+    public void should_post_process_before_instantiation() {
+        Class<?> beanClass = String.class;
+        String beanName = "name";
+
+        Object result = processor.postProcessBeforeInstantiation(beanClass, beanName);
+        Assertions.assertThat(result).isNull();
+    }
+
+    @Test
+    public void should_post_process_after_instantiation() {
+        String beanName = "name";
+        Object bean = new Object();
+
+        boolean continuePopulateProperty = processor.postProcessAfterInstantiation(bean, beanName);
+        Assertions.assertThat(continuePopulateProperty).isTrue();
+    }
+
     public static class HelloService {
         @Value("${name}")
         private String name;

@@ -2,12 +2,12 @@ package com.pcz.simple.spring.framework.beans.factory;
 
 import com.pcz.simple.spring.framework.beans.PropertyValue;
 import com.pcz.simple.spring.framework.beans.PropertyValues;
+import com.pcz.simple.spring.framework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.pcz.simple.spring.framework.common.*;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanDefinition;
 import com.pcz.simple.spring.framework.beans.factory.config.BeanReference;
 import com.pcz.simple.spring.framework.beans.factory.support.DefaultListableBeanFactory;
 import com.pcz.simple.spring.framework.beans.factory.support.SimpleInstantiationStrategy;
-import com.pcz.simple.spring.framework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

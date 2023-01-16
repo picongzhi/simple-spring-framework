@@ -9,6 +9,9 @@ import java.util.List;
  * @author picongzhi
  */
 public class PropertyValues {
+    /**
+     * 属性列表
+     */
     private final List<PropertyValue> propertyValues = new ArrayList<>();
 
     /**

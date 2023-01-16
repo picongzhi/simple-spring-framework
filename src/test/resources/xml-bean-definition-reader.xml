@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+    <component-scan base-package="com.pcz.simple.spring.framework.common"/>
+
+    <bean id="userDao" class="com.pcz.simple.spring.framework.common.UserDaoFactoryBean"/>
+
+    <bean id="userService" class="com.pcz.simple.spring.framework.common.UserService" scope="singleton">
+        <property name="id" value="1"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+</beans>
